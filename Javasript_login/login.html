@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Modern Login</title>
+
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+    }
+
+    .login-container {
+        backdrop-filter: blur(15px);
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 15px;
+        padding: 35px;
+        width: 340px;
+        color: white;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .login-container h2 {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .input-group {
+        margin-bottom: 18px;
+    }
+
+    .input-group label {
+        font-size: 14px;
+    }
+
+    .input-group input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+        outline: none;
+        margin-top: 5px;
+    }
+
+    .password-box {
+        position: relative;
+    }
+
+    .toggle {
+        position: absolute;
+        right: 10px;
+        top: 38px;
+        cursor: pointer;
+        font-size: 14px;
+        color: black;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 12px;
+        background: #ff7eb3;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        background: #ff4e8a;
+        transform: scale(1.05);
+    }
+
+    .output {
+        margin-top: 15px;
+        font-size: 13px;
+        background: rgba(255,255,255,0.2);
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .error {
+        color: #ffb3b3;
+        font-size: 13px;
+        margin-top: 5px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="login-container">
+    <h2>🔐 Secure Login</h2>
+
+    <form onsubmit="handleLogin(event)">
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" id="username" placeholder="Enter username" required>
+        </div>
+
+        <div class="input-group password-box">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Enter password" required>
+            <span class="toggle" onclick="togglePassword()">👁</span>
+        </div>
+
+        <div class="error" id="error"></div>
+
+        <button type="submit" class="btn">Login</button>
+    </form>
+
+    <div class="output" id="output"></div>
+</div>
+
+<script>
+function toASCII(str) {
+    let asciiValues = [];
+    for (let i = 0; i < str.length; i++) {
+        asciiValues.push(str.charCodeAt(i));
+    }
+    return asciiValues.join(" ");
+}
+
+// Strong password validation
+function isValidPassword(password) {
+    let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+    return regex.test(password);
+}
+
+function togglePassword() {
+    let pass = document.getElementById("password");
+    pass.type = pass.type === "password" ? "text" : "password";
+}
+
+function handleLogin(event) {
+    event.preventDefault();
+
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
+    let error = document.getElementById("error");
+
+    error.textContent = "";
+
+    if (username.length < 3) {
+        error.textContent = "Username must be at least 3 characters";
+        return;
+    }
+
+    if (!isValidPassword(password)) {
+        error.textContent = "Password must contain uppercase, lowercase, number & special character (min 8 chars)";
+        return;
+    }
+
+    let userASCII = toASCII(username);
+    let passASCII = toASCII(password);
+
+    document.getElementById("output").innerHTML = `
+        <b>Username ASCII:</b> ${userASCII} <br>
+        <b>Password ASCII:</b> ${passASCII}
+    `;
+}
+</script>
+
+</body>
+</html>
